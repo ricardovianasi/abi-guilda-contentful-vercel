@@ -6,6 +6,8 @@ import { getAllPosts, getPostBySlug, getOptimizedImageUrl } from '@/lib/contentf
 import RichText from '@/components/RichText';
 import { TypeAuthor } from '@/lib/contentful.types';
 
+export const dynamic = 'force-dynamic';
+
 // Generate static params for all posts
 export async function generateStaticParams() {
   const posts = await getAllPosts(100);

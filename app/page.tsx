@@ -1,6 +1,8 @@
 import { getAllPosts } from '@/lib/contentful';
 import PostCard from '@/components/PostCard';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const posts = await getAllPosts(12);
 
