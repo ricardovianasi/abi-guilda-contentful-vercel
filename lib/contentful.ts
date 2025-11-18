@@ -13,14 +13,23 @@ if (!process.env.CONTENTFUL_ACCESS_TOKEN) {
 // CONTENTFUL CLIENTS
 // ============================================================================
 
+/**
+ * Contentful host configuration
+ * - cdn.contentful.com: Production (cached, fast)
+ * - preview.contentful.com: Preview (includes draft content)
+ */
+const CONTENTFUL_HOST = process.env.CONTENTFUL_HOST || 'cdn.contentful.com';
+
 // Create a Contentful client
 export const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
   environment: process.env.CONTENTFUL_ENV_ID || 'master',
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+  host: CONTENTFUL_HOST,
 });
 
 // Create a Preview client (for draft content)
+// Uses CONTENTFUL_PREVIEW_TOKEN and preview.contentful.com host
 export const previewClient = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
   environment: process.env.CONTENTFUL_ENV_ID || 'master',
