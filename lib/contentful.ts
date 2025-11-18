@@ -10,31 +10,32 @@ if (!process.env.CONTENTFUL_ACCESS_TOKEN) {
 }
 
 // ============================================================================
-// CONTENTFUL CLIENTS
+// CONTENTFUL CLIENT
 // ============================================================================
 
 /**
  * Contentful host configuration
- * - cdn.contentful.com: Production (cached, fast)
- * - preview.contentful.com: Preview (includes draft content)
+ * - cdn.contentful.com: Production (cached, fast) - uses ACCESS_TOKEN
+ * - preview.contentful.com: Preview (includes draft content) - uses PREVIEW_TOKEN
  */
 const CONTENTFUL_HOST = process.env.CONTENTFUL_HOST || 'cdn.contentful.com';
 
-// Create a Contentful client
+/**
+ * Select the appropriate token based on the host
+ * - cdn.contentful.com: CONTENTFUL_ACCESS_TOKEN (published content only)
+ * - preview.contentful.com: CONTENTFUL_PREVIEW_TOKEN (published + drafts)
+ */
+const isPreviewMode = CONTENTFUL_HOST === 'preview.contentful.com';
+const CONTENTFUL_TOKEN = isPreviewMode
+  ? process.env.CONTENTFUL_PREVIEW_TOKEN || process.env.CONTENTFUL_ACCESS_TOKEN
+  : process.env.CONTENTFUL_ACCESS_TOKEN;
+
+// Create a single Contentful client that adapts based on CONTENTFUL_HOST
 export const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
   environment: process.env.CONTENTFUL_ENV_ID || 'master',
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+  accessToken: CONTENTFUL_TOKEN,
   host: CONTENTFUL_HOST,
-});
-
-// Create a Preview client (for draft content)
-// Uses CONTENTFUL_PREVIEW_TOKEN and preview.contentful.com host
-export const previewClient = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID,
-  environment: process.env.CONTENTFUL_ENV_ID || 'master',
-  accessToken: process.env.CONTENTFUL_PREVIEW_TOKEN || process.env.CONTENTFUL_ACCESS_TOKEN,
-  host: 'preview.contentful.com',
 });
 
 // ============================================================================
@@ -44,16 +45,12 @@ export const previewClient = createClient({
 /**
  * Fetch all blog posts
  * @param limit - Maximum number of posts to fetch
- * @param preview - Whether to fetch draft content
+ * 
+ * Note: To fetch draft content, set CONTENTFUL_HOST=preview.contentful.com
  */
-export async function getAllPosts(
-  limit: number = 10,
-  preview: boolean = false
-): Promise<TypeBlogPost[]> {
-  const activeClient = preview ? previewClient : client;
-
+export async function getAllPosts(limit: number = 10): Promise<TypeBlogPost[]> {
   try {
-    const response = await activeClient.getEntries<TypeBlogPostSkeleton>({
+    const response = await client.getEntries<TypeBlogPostSkeleton>({
       content_type: 'blogPost',
       order: ['-sys.createdAt'],
       limit,
@@ -70,16 +67,12 @@ export async function getAllPosts(
 /**
  * Fetch a single blog post by slug
  * @param slug - The slug of the post
- * @param preview - Whether to fetch draft content
+ * 
+ * Note: To fetch draft content, set CONTENTFUL_HOST=preview.contentful.com
  */
-export async function getPostBySlug(
-  slug: string,
-  preview: boolean = false
-): Promise<TypeBlogPost | null> {
-  const activeClient = preview ? previewClient : client;
-
+export async function getPostBySlug(slug: string): Promise<TypeBlogPost | null> {
   try {
-    const response = await activeClient.getEntries<TypeBlogPostSkeleton>({
+    const response = await client.getEntries<TypeBlogPostSkeleton>({
       content_type: 'blogPost',
       'fields.slug': slug,
       limit: 1,
