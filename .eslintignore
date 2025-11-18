@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Generated files
+lib/contentful.types.ts
+
+# Config files
+next.config.js
+postcss.config.js
+tailwind.config.js
+
+# Temp files
+*.log
+.DS_Store
+.env*
+!.env.example
+
+# Test artifacts
+coverage/
+.nyc_output/
+
+
+
