@@ -47,11 +47,6 @@ export default function PostCard({ post }: PostCardProps) {
             {post.fields.title}
           </h2>
 
-
-          <h4 className="text-xl font-medium mb-2 hover:text-contentful-blue transition-colors">
-            {post.fields.subtitle}
-          </h4>
-
           <div className="text-sm text-gray-500 mb-3">
             <time dateTime={post.sys.createdAt}>{formattedDate}</time>
             {author && (
