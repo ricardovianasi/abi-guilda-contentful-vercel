@@ -1,0 +1,49 @@
+{
+  "name": "contentful-nextjs-demo",
+  "version": "1.0.0",
+  "description": "Demo project showing Contentful integration with Next.js",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "lint:strict": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "content-model:update-types": "tsx scripts/export-cf-types/cli.ts",
+    "create-sample-posts": "tsx scripts/create-sample-posts.ts",
+    "validate": "npm run type-check && npm run lint:strict && npm run format:check"
+  },
+  "dependencies": {
+    "@contentful/rich-text-react-renderer": "^15.19.0",
+    "@contentful/rich-text-types": "^16.3.0",
+    "cf-content-types-generator": "^2.16.1",
+    "contentful": "^10.6.21",
+    "contentful-management": "^11.63.1",
+    "dotenv": "^17.2.3",
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-command-line-args": "^2.5.1",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8.4.32",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3.3.6",
+    "tsx": "^4.20.6",
+    "typescript": "^5"
+  }
+}
