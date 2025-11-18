@@ -49,7 +49,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   }
 
   return (
-    <ContentfulPreviewProvider locale="en-US">
+    <ContentfulPreviewProvider locale="en-US" enableLiveUpdates enableInspectorMode>
       <PostContent post={post} />
     </ContentfulPreviewProvider>
   );

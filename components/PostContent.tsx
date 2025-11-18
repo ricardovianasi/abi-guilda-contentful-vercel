@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { Asset } from 'contentful';
 import RichText from '@/components/RichText';
 import { TypeBlogPost, TypeAuthor } from '@/lib/contentful.types';
-import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+import {
+  useContentfulInspectorMode,
+  useContentfulLiveUpdates,
+} from '@contentful/live-preview/react';
 
 // Helper function for image optimization (client-safe)
 function getOptimizedImageUrl(
@@ -36,6 +39,7 @@ interface PostContentProps {
 
 export default function PostContent({ post }: PostContentProps) {
   const updatedPost = useContentfulLiveUpdates(post);
+  const inspectorProps = useContentfulInspectorMode({ entryId: post.sys.id });
 
   const formattedDate = new Date(updatedPost.sys.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -82,7 +86,12 @@ export default function PostContent({ post }: PostContentProps) {
 
       {/* Title and Meta */}
       <header className="mb-8">
-        <h1 className="text-5xl font-bold mb-4 text-gray-900">{updatedPost.fields.title}</h1>
+        <h1
+          className="text-5xl font-bold mb-4 text-gray-900"
+          {...inspectorProps({ fieldId: 'title' })}
+        >
+          {updatedPost.fields.title}
+        </h1>
 
         <div className="flex items-center gap-4 text-gray-600 mb-4">
           <time dateTime={updatedPost.sys.createdAt}>{formattedDate}</time>
@@ -122,12 +131,17 @@ export default function PostContent({ post }: PostContentProps) {
 
       {/* Excerpt */}
       {updatedPost.fields.excerpt && (
-        <div className="text-xl text-gray-600 mb-8 pb-8 border-b">{updatedPost.fields.excerpt}</div>
+        <div
+          className="text-xl text-gray-600 mb-8 pb-8 border-b"
+          {...inspectorProps({ fieldId: 'excerpt' })}
+        >
+          {updatedPost.fields.excerpt}
+        </div>
       )}
 
       {/* Body Content */}
       {updatedPost.fields.body && (
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none" {...inspectorProps({ fieldId: 'body' })}>
           <RichText content={updatedPost.fields.body} />
         </div>
       )}

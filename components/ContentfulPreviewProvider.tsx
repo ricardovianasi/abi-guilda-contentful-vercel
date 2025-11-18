@@ -8,5 +8,9 @@ export function ContentfulPreviewProvider({
   children,
   ...props
 }: PropsWithChildren<ContentfulLivePreviewInitConfig>) {
-  return <ContentfulLivePreviewProvider {...props}>{children}</ContentfulLivePreviewProvider>;
+  return (
+    <ContentfulLivePreviewProvider {...props}>
+      {children}
+    </ContentfulLivePreviewProvider>
+  );
 }
