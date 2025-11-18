@@ -5,8 +5,30 @@ import Link from 'next/link';
 import { Asset } from 'contentful';
 import RichText from '@/components/RichText';
 import { TypeBlogPost, TypeAuthor } from '@/lib/contentful.types';
-import { getOptimizedImageUrl } from '@/lib/contentful';
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
+
+// Helper function for image optimization (client-safe)
+function getOptimizedImageUrl(
+  url: string,
+  options: {
+    width?: number;
+    height?: number;
+    quality?: number;
+    format?: 'jpg' | 'png' | 'webp';
+    fit?: 'pad' | 'fill' | 'scale' | 'crop' | 'thumb';
+  } = {}
+): string {
+  const params = new URLSearchParams();
+
+  if (options.width) params.append('w', options.width.toString());
+  if (options.height) params.append('h', options.height.toString());
+  if (options.quality) params.append('q', options.quality.toString());
+  if (options.format) params.append('fm', options.format);
+  if (options.fit) params.append('fit', options.fit);
+
+  const queryString = params.toString();
+  return queryString ? `${url}?${queryString}` : url;
+}
 
 interface PostContentProps {
   post: TypeBlogPost;
